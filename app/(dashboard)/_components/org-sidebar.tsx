@@ -3,7 +3,6 @@
 import Link from "next/link"
 import Image from "next/image";
 import { Poppins } from "next/font/google"
-import { Plus_Jakarta_Sans } from "next/font/google"
 import { cn } from "@/lib/utils"
 import { OrganizationSwitcher } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
@@ -14,11 +13,6 @@ const font = Poppins({
     subsets: ["latin"],
     weight: ["600"],
 });
-
-const font1 = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  weight: ["400", "600"],
-})
 
 export const OrgSidebar = () => {
 
@@ -59,7 +53,7 @@ export const OrgSidebar = () => {
                             border: "1px solid #E5E7EB",
                             justifyContent: "space-between",
                             backgroundColor: "white",
-                            fontFamily: font1.style.fontFamily,
+                            
                         },
                     }
                 }}
@@ -69,7 +63,7 @@ export const OrgSidebar = () => {
                     variant={favorites ? "ghost" : "secondary"}
                     size="lg"
                     nativeButton={false}
-                    className={cn("justify-start px-2 w-full", font1.className)}
+                    className={cn("justify-start px-2 w-full")}
                     render={
                     <Link href="/">
                         <LayoutDashboard className="h-4 w-4 mr-2" />
@@ -82,7 +76,7 @@ export const OrgSidebar = () => {
                     variant={favorites ? "secondary" : "ghost"}
                     size="lg"
                     nativeButton={false}
-                    className={cn("justify-start px-2 w-full", font1.className)}
+                    className={cn("justify-start px-2 w-full")}
                     render={
                     <Link href={{ pathname: "/", query: { favorites: true } }}>
                         <Star className="h-4 w-4 mr-2" />

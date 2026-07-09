@@ -7,19 +7,13 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { Plus_Jakarta_Sans } from "next/font/google";
-
-const font1 = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  weight: ["400", "600"],
-})
 
 export const InviteButton = () => {
     return (
         <Dialog>
             <DialogTrigger
                 render={
-                    <Button variant="outline" className={cn(font1.className)}>
+                    <Button variant="outline">
                         <Plus className="h-4 w-4 mr-2" />
                         Invite people
                     </Button>
