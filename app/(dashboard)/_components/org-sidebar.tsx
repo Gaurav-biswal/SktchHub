@@ -50,9 +50,10 @@ export const OrgSidebar = () => {
                             padding: "6px",
                             width: "100%",
                             borderRadius: "8px",
-                            border: "1px solid #E5E7EB",
+                            border: "1px solid var(--border)",
                             justifyContent: "space-between",
-                            backgroundColor: "white",
+                            backgroundColor: "var(--card)",
+                            color: "var(--foreground)",
                             
                         },
                     }

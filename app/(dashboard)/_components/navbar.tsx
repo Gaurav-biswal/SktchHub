@@ -6,14 +6,8 @@ import {
     useOrganization,
 } from "@clerk/nextjs";
 import { SearchInput } from "./search-input";
-import { Plus_Jakarta_Sans } from "next/font/google"
 import { InviteButton } from "./invite-button";
-import { Invitation } from "@clerk/nextjs/server";
-
-const font1 = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  weight: ["400", "600"],
-})
+import { ThemeToggle } from "./theme-toggle";
 
 export const Navbar =() => {
 
@@ -43,7 +37,6 @@ export const Navbar =() => {
                             border: "1px solid #E5E7EB",
                             justifyContent: "space-between",
                             backgroundColor: "white",
-                            fontFamily: font1.style.fontFamily,
                         },
                     }
                 }}
@@ -52,6 +45,7 @@ export const Navbar =() => {
             {organization && (
                 <InviteButton/>
             )}
+            <ThemeToggle />
             <UserButton/>
         </div>
     );
