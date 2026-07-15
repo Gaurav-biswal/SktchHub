@@ -1,14 +1,6 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkMiddleware } from '@clerk/nextjs/server'
 
-// 1. Define which routes require authentication (protects everything except static assets)
-const isProtectedRoute = createRouteMatcher(["/(.*)"]);
-
-export default clerkMiddleware(async (auth, req) => {
-  // 2. Force a redirect to the sign-in page if the visitor is logged out
-  if (isProtectedRoute(req)) {
-    await auth.protect();
-  }
-});
+export default clerkMiddleware()
 
 export const config = {
   matcher: [
@@ -19,4 +11,4 @@ export const config = {
     // Always run for Clerk-specific frontend API routes
     '/__clerk/(.*)',
   ],
-};
+}

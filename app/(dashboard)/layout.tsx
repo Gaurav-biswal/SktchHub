@@ -1,14 +1,17 @@
+import { auth } from '@clerk/nextjs/server'
 import { Navbar } from "./_components/navbar";
 import { OrgSidebar } from "./_components/org-sidebar";
 import { Sidebar } from "./_components/sidebar";
 
 interface DashboardLayoutProps {
-    children : React.ReactNode;
+    children: React.ReactNode;
 };
 
-const DashboardLayout = ({
+const DashboardLayout = async ({
     children,
 }: DashboardLayoutProps) => {
+    await auth.protect();
+
     return(
         <main className="h-full">
             <Sidebar/>
