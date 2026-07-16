@@ -1,7 +1,5 @@
-import { Star } from "lucide-react";
+import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { title } from "process";
-import { text } from "stream/consumers";
 
 interface FooterProps {
     title: string;
@@ -20,6 +18,14 @@ export const Footer = ({
     onClick,
     disabled,
 }: FooterProps) => {
+    const handleClick = (
+        event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    ) => {
+        event.stopPropagation();
+        event.preventDefault();
+        onClick();
+    };
+
     return (
         <div className="relative var(--card) p-3">
             <p className="text-[13px] truncate max-w-[calc(100%-20px)]">
@@ -30,16 +36,16 @@ export const Footer = ({
             </p>
             <button
               disabled={disabled}
-              onClick={onClick}
+              onClick={handleClick}
               className={cn(
-                "opacity-0 group-hover:opacity-100 transition absolute top-3 right-3 text-muted-foreground hover:text-blue-600",
+                "opacity-0 group-hover:opacity-100 transition absolute top-3 right-3 text-muted-foreground hover:text-pink-600",
                 disabled && "cursor-not-allowed opacity-75"
               )}
               >
-                <Star
+                <Heart
                     className={cn(
-                        "h-4 w-4",
-                        isFavorite && "fill-blue-600 text-blue-600"
+                        "h-5 w-5",
+                        isFavorite && "fill-pink-600 text-pink-600"
                     )}
                 />
             </button>
