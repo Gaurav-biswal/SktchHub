@@ -4,6 +4,7 @@ import { ConvexClientProvider } from "@/providers/convex-client-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { Poppins } from "next/font/google"
 import { Toaster } from "@/components/ui/sonner";
+import { ModalProvider } from "@/providers/modal-provider";
 
 const font = Poppins({ subsets: ["latin"], weight: ["400", "500", "600"] })
 
@@ -27,6 +28,7 @@ export default function RootLayout({
         >
           <ConvexClientProvider>
             <Toaster/>
+            <ModalProvider/>
             {children}
           </ConvexClientProvider>
         </ThemeProvider>
