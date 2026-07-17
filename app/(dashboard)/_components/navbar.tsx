@@ -7,7 +7,7 @@ import {
 } from "@clerk/nextjs";
 import { SearchInput } from "./search-input";
 import { InviteButton } from "./invite-button";
-import { ThemeToggle } from "./theme-toggle";
+
 
 export const Navbar =() => {
 
@@ -36,8 +36,7 @@ export const Navbar =() => {
                             borderRadius: "8px",
                             border: "1px solid #E5E7EB",
                             justifyContent: "space-between",
-                            backgroundColor: "var(--card)",
-                            color: "var(--foreground)",
+                            backgroundColor: "white",
                         },
                     }
                 }}
@@ -46,7 +45,6 @@ export const Navbar =() => {
             {organization && (
                 <InviteButton/>
             )}
-            <ThemeToggle />
             <UserButton/>
         </div>
     );

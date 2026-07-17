@@ -27,7 +27,7 @@ export const Footer = ({
     };
 
     return (
-        <div className="relative var(--card) p-3">
+        <div className="relative bg-card p-3">
             <p className="text-[13px] truncate max-w-[calc(100%-20px)]">
                 {title}
             </p>
