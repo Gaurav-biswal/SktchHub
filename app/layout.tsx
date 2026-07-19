@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ConvexClientProvider } from "@/providers/convex-client-provider";
+import { LiveblocksClientProvider } from "@/providers/liveblocks-provider";
 import { Poppins } from "next/font/google"
 import { Toaster } from "@/components/ui/sonner";
 import { ModalProvider } from "@/providers/modal-provider";
@@ -21,9 +22,11 @@ export default function RootLayout({
     <html lang="en" className={font.className} suppressHydrationWarning>
       <body>
           <ConvexClientProvider>
-            <Toaster/>
-            <ModalProvider/>
-            {children}
+            <LiveblocksClientProvider>
+              <Toaster/>
+              <ModalProvider/>
+              {children}
+            </LiveblocksClientProvider>
           </ConvexClientProvider>
       </body>
     </html>
