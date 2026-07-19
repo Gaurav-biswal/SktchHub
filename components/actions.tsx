@@ -23,6 +23,7 @@ interface ActionsProps {
     sideOffset?: DropdownMenuContentProps["sideOffset"];
     id: string;
     title: string;
+    nativeButton?: boolean;
 };
 
 export const Actions = ({
@@ -31,6 +32,7 @@ export const Actions = ({
     sideOffset,
     id,
     title,
+    nativeButton = true,
 }: ActionsProps) => {
 
     const { onOpen } = useRenameModal();
@@ -55,6 +57,7 @@ export const Actions = ({
         <DropdownMenu>
              <DropdownMenuTrigger
                 onClick={(e) => e.stopPropagation()}
+                nativeButton={nativeButton}
                 render={children as React.ReactElement}
             />
             <DropdownMenuContent
