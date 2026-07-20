@@ -6,7 +6,9 @@ const isPublicRoute = createRouteMatcher(['/sign-in(.*)', '/sign-up(.*)'])
 export default clerkMiddleware(async (auth, request) => {
     const { userId } = await auth()
     if (!userId && !isPublicRoute(request)) {
-        return NextResponse.redirect(new URL('https://worthy-whale-2.accounts.dev/sign-in', request.url))
+        const signInUrl = new URL('https://worthy-whale-2.accounts.dev/sign-in')
+        signInUrl.searchParams.set('redirect_url', request.url)
+        return NextResponse.redirect(signInUrl)
     }
 })
 
@@ -16,7 +18,6 @@ export const config = {
         '/(api|trpc)(.*)',
     ],
 }
-
 // import { clerkMiddleware } from '@clerk/nextjs/server'
 
 // export default clerkMiddleware()
