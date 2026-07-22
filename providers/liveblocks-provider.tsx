@@ -10,7 +10,10 @@ export const LiveblocksClientProvider = ({
     children,
 }: LiveblocksClientProviderProps) => {
     return (
-        <LiveblocksProvider authEndpoint="/api/liveblocks-auth">
+        <LiveblocksProvider
+          authEndpoint="/api/liveblocks-auth"
+          throttle={16}  
+        >
             {children}
         </LiveblocksProvider>
     );
