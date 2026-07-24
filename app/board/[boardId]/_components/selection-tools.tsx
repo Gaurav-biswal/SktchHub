@@ -1,10 +1,14 @@
 "use client"
 
 import { useSelectionBounds } from "@/app/hooks/use-selection-bounds";
+import { useDeleteLayers } from "@/app/hooks/use-delete-layers";
 import { Camera, Color } from "@/types/canvas";
-import { useMutation, useSelf } from "@liveblocks/react";
+import { useMutation, useSelf } from "@liveblocks/react/suspense";
 import { memo } from "react";
 import { ColorPicker } from "./color-picker";
+import { Button } from "@/components/ui/button";
+import { Hint } from "@/components/hint";
+import { BringToFront, SendToBack, Trash2 } from "lucide-react";
 
 interface SelectionToolsProps {
     camera: Camera;
@@ -18,6 +22,44 @@ export const SelectionTools = memo(({
 
     const selection = useSelf((me) => me.presence.selection);
 
+    const moveToFront = useMutation((
+        { storage }
+    ) => {
+        const liveLayerIds = storage.get("layerIds");
+        const indices: number[] = [];
+
+        const arr = Array.from(liveLayerIds);
+
+        for (let i =0; i < arr.length; i++) {
+            if (selection?.includes(arr[i])) {
+                indices.push(i);
+            }
+        }
+
+        for (let i = indices.length - 1; i >= 0; i--) {
+            liveLayerIds.move(indices[i], arr.length - 1 - (indices.length - 1 - i));
+        }
+    }, [selection]);
+
+    const moveToBack = useMutation((
+        { storage }
+    ) => {
+        const liveLayerIds = storage.get("layerIds");
+        const indices: number[] = [];
+
+        const arr = Array.from(liveLayerIds);
+
+        for (let i =0; i < arr.length; i++) {
+            if (selection?.includes(arr[i])) {
+                indices.push(i);
+            }
+        }
+
+        for (let i = 0; i < indices.length; i++) {
+            liveLayerIds.move(indices[i], i);
+        }
+    }, [selection]);
+
     const setFill = useMutation((
         { storage },
         fill: Color,
@@ -29,6 +71,8 @@ export const SelectionTools = memo(({
             liveLayers.get(id)?.set("fill", fill);
         })
     }, [selection, setLastUsedColor]);
+
+    const deleteLayers = useDeleteLayers();
 
     const selectionBounds = useSelectionBounds();
 
@@ -52,6 +96,40 @@ export const SelectionTools = memo(({
             <ColorPicker
                 onChange={setFill}
             />
+
+            <div className="flex flex-col gap-y-0.5">
+                <Hint label="To front">
+                    <Button
+                        onClick={moveToFront}
+                        variant="board"
+                        size="icon"
+                    >
+                        <BringToFront/>
+                    </Button>
+                </Hint>
+
+                <Hint label="To back" side="bottom">
+                    <Button
+                        onClick={moveToBack}
+                        variant="board"
+                        size="icon"
+                    >
+                        <SendToBack/>
+                    </Button>
+                </Hint>
+            </div>
+
+            <div className="flex items-center pl-2 ml-2 border-l border-neutral-200">
+                <Hint label="Delete">
+                    <Button
+                        variant="board"
+                        size="icon"
+                        onClick={deleteLayers}
+                    >
+                        <Trash2/>
+                    </Button>
+                </Hint>
+            </div>
         </div>
     )
 });
