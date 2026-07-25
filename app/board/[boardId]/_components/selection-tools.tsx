@@ -98,7 +98,7 @@ export const SelectionTools = memo(({
             />
 
             <div className="flex flex-col gap-y-0.5">
-                <Hint label="To front">
+                <Hint label="To front" side="right">
                     <Button
                         onClick={moveToFront}
                         variant="board"
@@ -108,7 +108,7 @@ export const SelectionTools = memo(({
                     </Button>
                 </Hint>
 
-                <Hint label="To back" side="bottom">
+                <Hint label="To back" side="right">
                     <Button
                         onClick={moveToBack}
                         variant="board"
@@ -117,10 +117,8 @@ export const SelectionTools = memo(({
                         <SendToBack/>
                     </Button>
                 </Hint>
-            </div>
 
-            <div className="flex items-center pl-2 ml-2 border-l border-neutral-200">
-                <Hint label="Delete">
+                <Hint label="Delete" side="right">
                     <Button
                         variant="board"
                         size="icon"
