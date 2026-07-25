@@ -2,16 +2,10 @@ import { Camera, Color, Layer, Point, Side, XYHW } from "@/types/canvas";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-const COLORS = [
-  "#DC2626",
-  "#b8ad12",
-  "#ec4e95",
-  "#7C3AED",
-  "#059669"
-];
+const COLORS = ["#DC2626", "#b8ad12", "#ec4e95", "#7C3AED", "#059669"];
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export function connectionIdToColor(connectionId: number): string {
@@ -20,13 +14,13 @@ export function connectionIdToColor(connectionId: number): string {
 
 export function pointerEventToCanvasPoint(
   e: React.PointerEvent,
-  camera: Camera
+  camera: Camera,
 ) {
   return {
     x: Math.round(e.clientX) - camera.x,
     y: Math.round(e.clientY) - camera.y,
   };
-};
+}
 
 export function colorToCss(color: Color) {
   const r = color.r.toString(16).padStart(2, "0");
@@ -36,11 +30,7 @@ export function colorToCss(color: Color) {
   return `#${r}${g}${b}`;
 }
 
-export function resizeBounds(
-  bounds: XYHW,
-  corner: Side,
-  point: Point,
-): XYHW {
+export function resizeBounds(bounds: XYHW, corner: Side, point: Point): XYHW {
   const result = {
     x: bounds.x,
     y: bounds.y,
@@ -53,23 +43,23 @@ export function resizeBounds(
     result.width = Math.abs(bounds.x + bounds.width - point.x);
   }
 
-  if((corner & Side.Right) === Side.Right) {
+  if ((corner & Side.Right) === Side.Right) {
     result.x = Math.min(point.x, bounds.x);
     result.width = Math.abs(point.x - bounds.x);
   }
 
-  if((corner & Side.Top) === Side.Top) {
+  if ((corner & Side.Top) === Side.Top) {
     result.y = Math.min(point.y, bounds.y + bounds.height);
     result.height = Math.abs(bounds.y + bounds.height - point.y);
   }
 
-  if((corner & Side.Bottom) === Side.Bottom) {
+  if ((corner & Side.Bottom) === Side.Bottom) {
     result.y = Math.min(point.y, bounds.y);
     result.height = Math.abs(point.y - bounds.y);
   }
 
   return result;
-};
+}
 
 export function findIntersectingLayersWithRectangle(
   layerIds: readonly string[],
@@ -93,7 +83,7 @@ export function findIntersectingLayersWithRectangle(
       continue;
     }
 
-    const { x, y, height, width} = layer;
+    const { x, y, height, width } = layer;
 
     if (
       rect.x + rect.width > x &&
@@ -106,4 +96,10 @@ export function findIntersectingLayersWithRectangle(
   }
 
   return ids;
-};
+}
+
+export function getContrastingTextColor(color: Color) {
+  const luminance = 0.299 * color.r + 0.587 * color.g + 0.114 * color.b;
+
+  return luminance > 182 ? "black" : "white";
+}
