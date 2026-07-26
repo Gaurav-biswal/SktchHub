@@ -1,5 +1,6 @@
 import {
     Circle,
+    FileDown,
     MousePointer2,
     Pencil,
     Redo2,
@@ -19,6 +20,7 @@ interface ToolbarProps {
     redo: () => void;
     canUndo: boolean;
     canRedo: boolean;
+    onExportPdf: () => void;
 };
 
 export const Toolbar = ({
@@ -28,6 +30,7 @@ export const Toolbar = ({
     redo,
     canUndo,
     canRedo,
+    onExportPdf,
 }: ToolbarProps) => {
     return (
         <div className="absolute top-[50%] -translate-y-[50%]
@@ -122,6 +125,15 @@ export const Toolbar = ({
                     isDisabled={!canRedo}
                 />
                 
+            </div>
+
+            <div className="bg-white rounded-md p-1.5 flex
+               flex-col items-center shadow-md">
+                <ToolButton
+                    label="Export as PDF"
+                    icon={FileDown}
+                    onClick={onExportPdf}
+                />
             </div>
 
         </div>

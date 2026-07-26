@@ -34,6 +34,11 @@ import {
   pointerEventToCanvasPoint,
   resizeBounds,
 } from "@/lib/utils";
+import {
+  calculateBoundingBox,
+  downloadPngAsPdf,
+  renderBoardToPng,
+}from "@/lib/export-board";
 import { LiveObject } from "@liveblocks/client";
 import { LayerPreview } from "./layer-preview";
 import { SelectionBox } from "./selection-box";
@@ -41,6 +46,7 @@ import { SelectionTools } from "./selection-tools";
 import { Path } from "./path";
 import { useDisableScrollBounce } from "@/app/hooks/use-disable-scroll-bounce";
 import { useDeleteLayers } from "@/app/hooks/use-delete-layers";
+import { toast } from "sonner";
 
 const MAX_LAYERS = 100;
 
@@ -50,6 +56,8 @@ interface CanvasProps {
 
 export const Canvas = ({ boardId }: CanvasProps) => {
   const layerIds = useStorage((root) => root.layerIds);
+
+  const layers = useStorage((root) => root.layers);
 
   const pencilDraft = useSelf((me) => me.presence.pencilDraft);
 
@@ -391,6 +399,21 @@ export const Canvas = ({ boardId }: CanvasProps) => {
     return layerIdsToColorSelection;
   }, [selections]);
 
+const handleExportPdf = useCallback(async () => {
+  if (!layers) return;
+
+  const bbox = calculateBoundingBox(layers);
+
+  try {
+    const dataUrl = await renderBoardToPng(layers, layerIds, bbox);
+    downloadPngAsPdf(dataUrl, bbox.width, bbox.height, `board-${boardId}`);
+    toast.success("Board exported as PDF");
+  } catch (error) {
+    console.error("Failed to export board:", error);
+    toast.error("Failed to export board");
+  }
+}, [layers, layerIds, boardId]);
+
   const deleteLayers = useDeleteLayers();
 
   useEffect(() => {
@@ -427,6 +450,7 @@ export const Canvas = ({ boardId }: CanvasProps) => {
         redo={history.redo}
         canUndo={canUndo}
         canRedo={canRedo}
+        onExportPdf={handleExportPdf}
       />
 
       <SelectionTools camera={camera} setLastUsedColor={setLastUsedColor} />

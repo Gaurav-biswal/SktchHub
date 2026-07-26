@@ -2,7 +2,7 @@ import { Jua } from "next/font/google";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import { cn, colorToCss, getContrastingTextColor } from "@/lib/utils";
 import { NoteLayer } from "@/types/canvas";
-import { useMutation } from "@liveblocks/react";
+import { useMutation } from "@liveblocks/react/suspense";
 
 const font = Jua({
   subsets: ["latin"],
@@ -13,7 +13,7 @@ const calculateFontSize = (width: number, height: number) => {
   const maxFontSize = 100;
   const scaleFactor = 0.15;
   const fontSizeBasedOnHeight = height * scaleFactor;
-  const fontSizeBasedOnWidth = height * scaleFactor;
+  const fontSizeBasedOnWidth = width * scaleFactor;
 
   return Math.min(fontSizeBasedOnHeight, fontSizeBasedOnWidth, maxFontSize);
 };

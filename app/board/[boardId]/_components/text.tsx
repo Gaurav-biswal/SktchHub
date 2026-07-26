@@ -2,7 +2,7 @@ import { Caveat } from "next/font/google";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import { cn, colorToCss } from "@/lib/utils";
 import { TextLayer } from "@/types/canvas";
-import { useMutation } from "@liveblocks/react";
+import { useMutation } from "@liveblocks/react/suspense";
 
 const font = Caveat({
   subsets: ["latin"],
@@ -11,9 +11,9 @@ const font = Caveat({
 
 const calculateFontSize = (width: number, height: number) => {
   const maxFontSize = 100;
-  const scaleFactor = 0.5;
+  const scaleFactor = 0.4;
   const fontSizeBasedOnHeight = height * scaleFactor;
-  const fontSizeBasedOnWidth = height * scaleFactor;
+  const fontSizeBasedOnWidth = width * scaleFactor;
 
   return Math.min(fontSizeBasedOnHeight, fontSizeBasedOnWidth, maxFontSize);
 };
