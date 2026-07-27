@@ -13,8 +13,8 @@ export const EmptyOrg = () => {
             <Image
               src="/elements.svg"
               alt="Empty"
-              height={200}
-              width={200}
+              height={250}
+              width={250}
             />
             <h2 className="text-2xl font-semibold mt-6">
                 Welcome to SktchHub
