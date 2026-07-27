@@ -319,11 +319,6 @@ export const Canvas = ({ boardId }: CanvasProps) => {
         }));
 
         lastPanCenter.current = center;
-
-        setCanvasState({
-          mode: CanvasMode.Panning,
-          current: center,
-        });
       }
   return;
 }
