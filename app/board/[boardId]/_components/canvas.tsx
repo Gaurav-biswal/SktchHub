@@ -3,7 +3,7 @@
 import { Info } from "./info";
 import { Participants } from "./participants";
 import { Toolbar } from "./toolbar";
-import { useCallback, useMemo, useState, useEffect } from "react";
+import { useCallback, useMemo, useState, useEffect, useRef } from "react";
 import { nanoid } from "nanoid";
 import {
   Camera,
@@ -66,6 +66,8 @@ export const Canvas = ({ boardId }: CanvasProps) => {
   });
 
   const [camera, setCamera] = useState({ x: 0, y: 0 });
+  const activePointers = useRef<Map<number, Point>>(new Map());
+  const lastPanCenter = useRef<Point | null>(null);
 
   const [lastUsedColor, setLastUsedColor] = useState<Color>({
     r: 0,
@@ -294,6 +296,38 @@ export const Canvas = ({ boardId }: CanvasProps) => {
 
       const current = pointerEventToCanvasPoint(e, camera);
 
+      if (
+        canvasState.mode === CanvasMode.Panning &&
+        e.pointerType === "touch"
+      ) {
+          activePointers.current.set(e.pointerId, current);
+
+      if (activePointers.current.size === 2 && lastPanCenter.current) {
+        const touches = Array.from(activePointers.current.values());
+
+        const center = {
+          x: (touches[0].x + touches[1].x) / 2,
+          y: (touches[0].y + touches[1].y) / 2,
+        };
+
+        const dx = center.x - lastPanCenter.current.x;
+        const dy = center.y - lastPanCenter.current.y;
+
+        setCamera((camera) => ({
+          x: camera.x + dx,
+          y: camera.y + dy,
+        }));
+
+        lastPanCenter.current = center;
+
+        setCanvasState({
+          mode: CanvasMode.Panning,
+          current: center,
+        });
+      }
+  return;
+}
+
       if (canvasState.mode === CanvasMode.Pressing) {
         startMultiSelection(current, canvasState.origin);
       } else if (canvasState.mode === CanvasMode.SelectionNet) {
@@ -317,24 +351,72 @@ export const Canvas = ({ boardId }: CanvasProps) => {
 
   const onPointerDown = useCallback(
     (e: React.PointerEvent) => {
+
       const point = pointerEventToCanvasPoint(e, camera);
 
-      if (canvasState.mode === CanvasMode.Inserting) {
+      e.currentTarget.setPointerCapture(e.pointerId);
+
+      // Track touch pointers
+      if (e.pointerType === "touch") {
+        activePointers.current.set(e.pointerId, point);
+
+      // Two-finger pan
+      if (activePointers.current.size === 2) {
+        const touches = Array.from(activePointers.current.values());
+
+        lastPanCenter.current = {
+          x: (touches[0].x + touches[1].x) / 2,
+          y: (touches[0].y + touches[1].y) / 2,
+        };
+
+        setCanvasState({
+          mode: CanvasMode.Panning,
+          current: lastPanCenter.current,
+        });
+
         return;
       }
+    }
 
-      if (canvasState.mode === CanvasMode.Pencil) {
-        startDrawing(point, e.pressure);
-        return;
-      }
+    if (canvasState.mode === CanvasMode.Inserting) {
+      return;
+    }
 
-      setCanvasState({ origin: point, mode: CanvasMode.Pressing });
-    },
-    [camera, canvasState.mode, setCanvasState, startDrawing],
-  );
+    if (canvasState.mode === CanvasMode.Pencil) {
+      startDrawing(point, e.pressure);
+      return;
+    }
+
+    setCanvasState({
+      origin: point,
+      mode: CanvasMode.Pressing,
+    });
+  },
+  [camera, canvasState.mode, startDrawing],
+);
+
 
   const onPointerUp = useMutation(
     ({}, e) => {
+
+      if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      }
+
+      if (e.pointerType === "touch") {
+        activePointers.current.delete(e.pointerId);
+
+        if (activePointers.current.size < 2) {
+          lastPanCenter.current = null;
+
+          if (canvasState.mode === CanvasMode.Panning) {
+            setCanvasState({
+              mode: CanvasMode.None,
+            });
+          }
+        }
+      }
+
       const point = pointerEventToCanvasPoint(e, camera);
 
       if (
